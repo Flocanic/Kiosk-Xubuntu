@@ -187,8 +187,8 @@ function displayDailyReport(data) {
                         <th>Produktname</th>
                         <th>Verkaufte Menge</th>
                         <th>Umsatz (€)</th>
-                        <th>Verkäufer ID</th>
-                        <th>Transaktions ID</th>
+                        <th>Verkäufer ID</th>   
+
                     </tr>
                 </thead>
                 <tbody>
@@ -202,7 +202,6 @@ function displayDailyReport(data) {
                     <td>${sale.total_quantity}</td>
                     <td>${sale.total_sales.toFixed(2)}</td>
                     <td>${sale.sellerID || 'N/A'}</td>
-                    <td>${sale.transaction}</td>
                 </tr>
             `;
         });
@@ -226,7 +225,7 @@ function displayDailyReport(data) {
                     <thead>
                         <tr>
                             <th>Trans. ID</th>
-                            <th>Zahlung ID</th>
+                            
                             <th>Produkt ID</th>
                             <th>Produktname</th>
                             <th>Menge</th>
@@ -243,7 +242,7 @@ function displayDailyReport(data) {
                 html += `
                     <tr>
                         <td>${transaction.transaction_id}</td>
-                        <td>${transaction.payment_id || 'N/A'}</td>
+                        
                         <td>${transaction.product_id}</td>
                         <td>${transaction.product_name || 'N/A'}</td>
                         <td>${transaction.quantity}</td>
