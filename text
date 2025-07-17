@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cd /pfad/zu/deinem/project
+nohup node server.js > server.log 2>&1 &
+
+sleep 5
+
+chromium-browser --kiosk --app=http://localhost:3000
