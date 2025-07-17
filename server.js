@@ -84,66 +84,46 @@ app.post('/complete-purchase', (req, res) => {
     db.serialize(() => {
         db.run('BEGIN TRANSACTION');
 
-        let totalAmount = 0;
-        const date = new Date();
+        let allSuccess = true;
+        let completed = 0;
         const transactionId = Date.now().toString();
-        const paymentId = `PAY-${Math.floor(Math.random() * 10000)}`;
-        const dateStr = date.toISOString().split('T')[0];
 
-        let transactionFailed = false;
+        cart.forEach(item => {
+            const { id, quantity, name, price } = item;
+            const total = quantity * price;
 
-        for (const item of cart) {
-            const { id, quantity, price } = item;
-            const itemTotal = price * quantity;
-            totalAmount += itemTotal;
-
-            db.get('SELECT name FROM products WHERE id = ?', [id], (err, row) => {
-                if (err || !row) {
-                    console.error('Fehler beim Abrufen des Produktnamens:', err);
-                    db.run('ROLLBACK');
-                    return res.status(500).json({ success: false, message: 'Fehler beim Abrufen des Produktnamens' });
-                }
-
-                const productName = row.name;
-
-                db.run('UPDATE products SET quantity = quantity - ? WHERE id = ?', [quantity, id], function (err) {
+            db.run(`INSERT INTO transactions 
+                (transaction_id, product_id, quantity, unit_price, total, date, payment_id, sellerID, name) 
+                VALUES (?, ?, ?, ?, ?, datetime('now'), ?, ?, ?)`,
+                [transactionId, id, quantity, price, total, "bar", sellerID, name],
+                function (err) {
                     if (err) {
-                        console.error('Fehler beim Aktualisieren des Produkts:', err);
-                        db.run('ROLLBACK');
-                        return res.status(500).json({ success: false, message: 'Fehler beim Aktualisieren des Lagerbestands' });
+                        console.error("Fehler beim Einfügen in transactions:", err);
+                        allSuccess = false;
                     }
-                });
 
-                db.run(
-                    'INSERT INTO transactions (transaction_id, product_id, quantity, unit_price, total, date, sellerID) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                    [transactionId, id, quantity, price, itemTotal, dateStr, sellerID],
-                    function (err) {
-                        if (err) {
-                            console.error('Fehler beim Speichern der Transaktion:', err);
-                            db.run('ROLLBACK');
-                            transactionFailed = true;
+                    db.run(`UPDATE products SET quantity = quantity - ? WHERE id = ?`, [quantity, id], function (err2) {
+                        if (err2) {
+                            console.error("Fehler beim Aktualisieren der Produkte:", err2);
+                            allSuccess = false;
                         }
-                    }
-                );
-            });
-        }
-        
-        if (transactionFailed) {
-            db.run('ROLLBACK');
-            return res.status(500).json({ success: false, message: 'Fehler beim Speichern der Transaktion' });
-        }
 
-        db.run('COMMIT', function (err) {
-            if (err) {
-                console.error('Fehler beim Commit der Transaktion:', err);
-                db.run('ROLLBACK');
-                return res.status(500).json({ success: false, message: 'Fehler beim Abschließen der Transaktion' });
-            }
-
-            res.json({ success: true, message: 'Kauf erfolgreich abgeschlossen', totalAmount });
+                        completed++;
+                        if (completed === cart.length) {
+                            if (allSuccess) {
+                                db.run('COMMIT');
+                                return res.json({ success: true, message: 'Kauf abgeschlossen' });
+                            } else {
+                                db.run('ROLLBACK');
+                                return res.status(500).json({ success: false, message: 'Fehler beim Verarbeiten der Transaktion' });
+                            }
+                        }
+                    });
+                });
         });
     });
 });
+
 
 
 app.delete('/delete-product/:id', (req, res) => {
