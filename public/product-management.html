@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produkt Management</title>
+    <link rel="stylesheet" href="product-management.css">
+</head>
+<body>
+    <h1>Produkt Management</h1>
+    
+    <div class="tabs">
+        <div class="tab active" data-tab="products">Produkte</div>
+        <div class="tab" data-tab="reports">Berichte</div>
+    </div>
+    <div style="margin-top: 20px;">
+        <a href="index.html" class="button">Zurück zum Kiosk</a>
+    </div>
+    <div id="products-tab" class="tab-content active">
+        <h2>Produkte Verwalten</h2>
+        
+        <div class="product-form">
+            <h3>Neues Produkt hinzufügen</h3>
+            <input type="text" id="product-name" placeholder="Produktname">
+            <input type="number" id="product-price" placeholder="Preis" step="0.01">
+            <input type="number" id="product-quantity" placeholder="Menge" min="0">
+            <button id="add-product-btn">Produkt hinzufügen</button>
+        </div>
+        
+        <h3>Alle Produkte</h3>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Preis (€)</th>
+                    <th>Menge</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody id="product-list">
+            </tbody>
+        </table>
+        
+        <div id="edit-form" class="edit-form">
+            <h3>Produkt bearbeiten</h3>
+            <input type="hidden" id="edit-product-id">
+            <input type="text" id="edit-product-name" placeholder="Produktname">
+            <input type="number" id="edit-product-price" placeholder="Preis" step="0.01">
+            <input type="number" id="edit-product-quantity" placeholder="Menge" min="0">
+            <button id="update-product-btn">Aktualisieren</button>
+            <button id="cancel-edit-btn">Abbrechen</button>
+        </div>
+    </div>
+    
+    <div id="reports-tab" class="tab-content">
+        <h2>Umsatzberichte</h2>
+        
+        <div class="reports-section">
+            <h3>Tagesumsatz (inkl. MwSt)</h3>
+            <div class="report-form">
+                <input type="date" id="daily-report-date">
+                <button id="get-daily-report-btn">Bericht anzeigen</button>
+            </div>
+            <div id="daily-report-results" class="report-results" style="display: none;">
+            </div>
+        </div>
+        
+        <div class="reports-section">
+            <h3>Monatsumsatz (inkl. MwSt)</h3>
+            <div class="report-form">
+                <select id="monthly-report-month">
+                    <option value="01">Januar</option>
+                    <option value="02">Februar</option>
+                    <option value="03">März</option>
+                    <option value="04">April</option>
+                    <option value="05">Mai</option>
+                    <option value="06">Juni</option>
+                    <option value="07">Juli</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">Oktober</option>
+                    <option value="11">November</option>
+                    <option value="12">Dezember</option>
+                </select>
+                <select id="monthly-report-year">
+                    <option value="2023">2023</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                </select>
+                <button id="get-monthly-report-btn">Bericht anzeigen</button>
+            </div>
+            <div id="monthly-report-results" class="report-results" style="display: none;">
+                
+            </div>
+        </div>
+    </div>
+    
+    <script src="product-management.js"></script>
+</body>
+</html>
+

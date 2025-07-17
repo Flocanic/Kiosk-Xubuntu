@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAA Kiosk</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .content-container {
+            display: flex;
+            flex: 1;
+        }
+        
+        #products {
+            flex: 1;
+            margin-right: 300px;
+            padding: 20px;
+        }
+        
+        #cart-panel {
+            position: fixed;
+            top: 80px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 80px);
+            background: white;
+            border-left: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>KIOSK!</h1>
+        <div class="header-buttons">
+
+            <a href="product-management.html" class="admin-link">Produktverwaltung</a>
+        </div>
+    </header>
+
+    <div id="seller-info">
+        <p id="seller-id-display">Aktuelle Verkäufer-ID: Nicht gesetzt</p>
+        <button id="logout-btn" style="display:none;" onclick="logout()">Ausloggen</button>
+    </div>
+
+    <div id="seller-modal" style="position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999;">
+        <div style="background-color: white; padding: 2rem; border-radius: 8px; text-align: center;">
+            <h2>Bitte Verkäufer-ID eingeben (1–10)</h2>
+            <input id="seller-id-input" type="number" min="1" max="10" style="padding: 0.5rem; font-size: 1rem;" />
+            <br><br>
+            <button onclick="setSellerID()" style="padding: 0.5rem 1rem; font-size: 1rem;">Bestätigen</button>
+        </div>
+    </div>
+
+    <div class="content-container">
+
+        <div id="products"></div>
+
+        <div id="cart-panel">
+            <h2>Gesamtanzeige</h2>
+            <div id="cart-items"></div>
+            <button id="checkout-btn">Kauf abschließen</button>
+
+        </div>
+    </div>
+
+    <div id="payment-window">
+        <h2>Geben Sie den ERHALTENEN Betrag ein</h2>
+        <div id="amount-input"></div>
+        <div class="keypad">
+            <button onclick="addAmount(1)">1</button>
+            <button onclick="addAmount(2)">2</button>
+            <button onclick="addAmount(3)">3</button>
+            <button onclick="addAmount(4)">4</button>
+            <button onclick="addAmount(5)">5</button>
+            <button onclick="addAmount(6)">6</button>
+            <button onclick="addAmount(7)">7</button>
+            <button onclick="addAmount(8)">8</button>
+            <button onclick="addAmount(9)">9</button>
+            <button onclick="addAmount('.')">,</button>
+            <button class="zero" onclick="addAmount(0)">0</button>
+            <button onclick="clearAmount()">C</button>
+        </div>
+        <div id="change-display" style="font-size: 20px; margin-top: 20px; color: #333;"></div>
+        <button id="calculate-change-btn">Rückgeld berechnen</button>
+        <button id="close-payment-btn">Schließen</button>
+    </div>
+
+    <div id="change-result">
+        <h3>Rückgeld</h3>
+        <div id="final-change-display" style="font-size: 30px; color: #333;"></div>
+        <button id="close-change-result-btn">Schließen & Kauf abschließen</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
